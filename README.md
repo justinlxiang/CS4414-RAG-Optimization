@@ -118,12 +118,12 @@ You'll work with approximately 10,000 document chunks—enough to build an inter
 
 Download the dataset of document:
 ```
-wget -c https://cornell.box.com/shared/static/987z1jm86dzqhdddkxzxpkhsjngcv4cc.json -O documents.json
+wget -c https://cornell.box.com/shared/static/ffwnimisulvjyzp1t9u3201uj3p0w3bk.json -O documents.json
 ```
 
 Download the dataset of query:
 ```
-wget -c https://cornell.box.com/shared/static/lcjm8ipmds5p9cpwnil1krrjzgwac2td.json -O queries.json
+wget -c https://cornell.box.com/shared/static/eg115icq6oz2shnq63vzjw3776v30mwy.json -O queries.json
 ```
 
 This file contains documents in plain text, one per line. Your job is to transform these natural language texts into searchable vectors. Let's get started!
@@ -157,19 +157,9 @@ Create data_preprocess.py (or .cpp) that does three things:
     ]
   },
   {
-    "id": 1,
-    "text": "1 You can sprinkle blood meal around your garden as well. 2  Don’t trap and relocate squirrels. 3  This is a losing battle since the population of squirrels is extremely high. 4  Also, if the animal is a female there is a high likelihood that you will remove her from babies that depend on her for survival.",
-    "embedding": [
-        0.016387939453125,
-        -0.004070281982421875,
-        0.01204681396484375,
-        …
-    -0.013885498046875,
-        0.0169830322265625,
-        -0.0023651123046875
-    ]
+    ...
   },
-  …
+  ...
 ]
 ```
 
