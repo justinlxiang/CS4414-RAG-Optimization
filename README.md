@@ -217,7 +217,7 @@ D, I = index.search(query_embedding, k=5)
 ```
 
 
-**For this assignment**: In Part 1, you'll primarily use single-query search (batch_size=1). In Part 3, you can optionally explore batch search for performance optimization!
+**For this assignment**: In Part 1, you'll primarily use single-query search (batch_size=1). In Part 3, you will explore batch search for performance optimization!
 
 
 ### What You Need to Build?
