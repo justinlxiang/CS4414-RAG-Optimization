@@ -1,0 +1,309 @@
+{
+  "num_queries": 20,
+  "statistics": {
+    "Query Encoding": {
+      "mean": 0.04386062622070312,
+      "std": 0.011085216407830114,
+      "min": 0.014655113220214844,
+      "max": 0.06206917762756348,
+      "median": 0.04296433925628662
+    },
+    "Vector Search": {
+      "mean": 0.0006751537322998047,
+      "std": 6.921068369275814e-05,
+      "min": 0.0006229877471923828,
+      "max": 0.0009291172027587891,
+      "median": 0.0006525516510009766
+    },
+    "Document Retrieval": {
+      "mean": 6.759166717529297e-06,
+      "std": 4.196624162001763e-06,
+      "min": 2.6226043701171875e-06,
+      "max": 1.3113021850585938e-05,
+      "median": 3.933906555175781e-06
+    },
+    "Prompt Augmentation": {
+      "mean": 6.115436553955078e-06,
+      "std": 1.5980715568675114e-06,
+      "min": 3.814697265625e-06,
+      "max": 9.059906005859375e-06,
+      "median": 5.9604644775390625e-06
+    },
+    "LLM Generation": {
+      "mean": 3.190556085109711,
+      "std": 1.427293599583398,
+      "min": 0.6681301593780518,
+      "max": 4.849106073379517,
+      "median": 3.7879685163497925
+    },
+    "Total": {
+      "mean": 3.2351077079772947,
+      "std": 1.4263518631190735,
+      "min": 0.7106618881225586,
+      "max": 4.910962104797363,
+      "median": 3.8279459476470947
+    }
+  },
+  "individual_queries": [
+    {
+      "query": "does human hair stop squirrels",
+      "timings": {
+        "query_encoding": 0.03900003433227539,
+        "vector_search": 0.0006339550018310547,
+        "document_retrieval": 4.0531158447265625e-06,
+        "prompt_augmentation": 4.76837158203125e-06,
+        "llm_generation": 3.7896320819854736,
+        "total_query_time": 3.8292758464813232
+      },
+      "num_retrieved_docs": 3,
+      "response_length": 885
+    },
+    {
+      "query": "what are the benefits of fossil fuels",
+      "timings": {
+        "query_encoding": 0.044078826904296875,
+        "vector_search": 0.0007290840148925781,
+        "document_retrieval": 3.0994415283203125e-06,
+        "prompt_augmentation": 6.9141387939453125e-06,
+        "llm_generation": 4.447636842727661,
+        "total_query_time": 4.49245810508728
+      },
+      "num_retrieved_docs": 3,
+      "response_length": 975
+    },
+    {
+      "query": "what is a apothem",
+      "timings": {
+        "query_encoding": 0.055787086486816406,
+        "vector_search": 0.0006601810455322266,
+        "document_retrieval": 3.0994415283203125e-06,
+        "prompt_augmentation": 4.0531158447265625e-06,
+        "llm_generation": 3.2231028079986572,
+        "total_query_time": 3.2795610427856445
+      },
+      "num_retrieved_docs": 3,
+      "response_length": 744
+    },
+    {
+      "query": "average cost for custom canopy",
+      "timings": {
+        "query_encoding": 0.038516998291015625,
+        "vector_search": 0.0006229877471923828,
+        "document_retrieval": 2.6226043701171875e-06,
+        "prompt_augmentation": 5.245208740234375e-06,
+        "llm_generation": 4.357444763183594,
+        "total_query_time": 4.396594762802124
+      },
+      "num_retrieved_docs": 3,
+      "response_length": 832
+    },
+    {
+      "query": "what is a hardware in a computer",
+      "timings": {
+        "query_encoding": 0.03594398498535156,
+        "vector_search": 0.0006320476531982422,
+        "document_retrieval": 8.106231689453125e-06,
+        "prompt_augmentation": 7.867813110351562e-06,
+        "llm_generation": 1.2269959449768066,
+        "total_query_time": 1.263592004776001
+      },
+      "num_retrieved_docs": 3,
+      "response_length": 243
+    },
+    {
+      "query": "edi logistics definition",
+      "timings": {
+        "query_encoding": 0.029484033584594727,
+        "vector_search": 0.0006380081176757812,
+        "document_retrieval": 1.2159347534179688e-05,
+        "prompt_augmentation": 5.9604644775390625e-06,
+        "llm_generation": 1.2433948516845703,
+        "total_query_time": 1.2735369205474854
+      },
+      "num_retrieved_docs": 3,
+      "response_length": 61
+    },
+    {
+      "query": "why should recreational marijuana be illegal",
+      "timings": {
+        "query_encoding": 0.035025835037231445,
+        "vector_search": 0.0006299018859863281,
+        "document_retrieval": 3.0994415283203125e-06,
+        "prompt_augmentation": 3.814697265625e-06,
+        "llm_generation": 4.175991058349609,
+        "total_query_time": 4.2116570472717285
+      },
+      "num_retrieved_docs": 3,
+      "response_length": 1075
+    },
+    {
+      "query": "what class are spiders in",
+      "timings": {
+        "query_encoding": 0.039667367935180664,
+        "vector_search": 0.0006341934204101562,
+        "document_retrieval": 3.0994415283203125e-06,
+        "prompt_augmentation": 4.76837158203125e-06,
+        "llm_generation": 3.7863049507141113,
+        "total_query_time": 3.826616048812866
+      },
+      "num_retrieved_docs": 3,
+      "response_length": 309
+    },
+    {
+      "query": "where is the amur leopard found",
+      "timings": {
+        "query_encoding": 0.04572892189025879,
+        "vector_search": 0.0007078647613525391,
+        "document_retrieval": 1.1920928955078125e-05,
+        "prompt_augmentation": 9.059906005859375e-06,
+        "llm_generation": 3.7251908779144287,
+        "total_query_time": 3.7716567516326904
+      },
+      "num_retrieved_docs": 3,
+      "response_length": 968
+    },
+    {
+      "query": "how much does it cost to spayed my female rabbit",
+      "timings": {
+        "query_encoding": 0.06206917762756348,
+        "vector_search": 0.0006368160247802734,
+        "document_retrieval": 8.344650268554688e-06,
+        "prompt_augmentation": 4.76837158203125e-06,
+        "llm_generation": 4.156913995742798,
+        "total_query_time": 4.219634056091309
+      },
+      "num_retrieved_docs": 3,
+      "response_length": 968
+    },
+    {
+      "query": "what does proteus mirabilis look like",
+      "timings": {
+        "query_encoding": 0.06024599075317383,
+        "vector_search": 0.0006368160247802734,
+        "document_retrieval": 1.3113021850585938e-05,
+        "prompt_augmentation": 7.867813110351562e-06,
+        "llm_generation": 0.8399450778961182,
+        "total_query_time": 0.9008510112762451
+      },
+      "num_retrieved_docs": 3,
+      "response_length": 0
+    },
+    {
+      "query": "is bougainvillea a shrub",
+      "timings": {
+        "query_encoding": 0.03996634483337402,
+        "vector_search": 0.0009291172027587891,
+        "document_retrieval": 1.0013580322265625e-05,
+        "prompt_augmentation": 6.198883056640625e-06,
+        "llm_generation": 3.956683874130249,
+        "total_query_time": 3.997598171234131
+      },
+      "num_retrieved_docs": 3,
+      "response_length": 924
+    },
+    {
+      "query": "is oxyfluorfen safe on cotton",
+      "timings": {
+        "query_encoding": 0.06117606163024902,
+        "vector_search": 0.0006611347198486328,
+        "document_retrieval": 1.2874603271484375e-05,
+        "prompt_augmentation": 4.0531158447265625e-06,
+        "llm_generation": 4.849106073379517,
+        "total_query_time": 4.910962104797363
+      },
+      "num_retrieved_docs": 3,
+      "response_length": 864
+    },
+    {
+      "query": "what types of bacteria are found in the mouth",
+      "timings": {
+        "query_encoding": 0.04617500305175781,
+        "vector_search": 0.0006530284881591797,
+        "document_retrieval": 2.86102294921875e-06,
+        "prompt_augmentation": 6.198883056640625e-06,
+        "llm_generation": 3.4340438842773438,
+        "total_query_time": 3.4808828830718994
+      },
+      "num_retrieved_docs": 3,
+      "response_length": 855
+    },
+    {
+      "query": "is self insurance insurance or a deductible",
+      "timings": {
+        "query_encoding": 0.05387711524963379,
+        "vector_search": 0.0007102489471435547,
+        "document_retrieval": 2.86102294921875e-06,
+        "prompt_augmentation": 6.198883056640625e-06,
+        "llm_generation": 0.8906350135803223,
+        "total_query_time": 0.9452352523803711
+      },
+      "num_retrieved_docs": 3,
+      "response_length": 0
+    },
+    {
+      "query": "average wage of an actor",
+      "timings": {
+        "query_encoding": 0.014655113220214844,
+        "vector_search": 0.0006399154663085938,
+        "document_retrieval": 3.0994415283203125e-06,
+        "prompt_augmentation": 5.9604644775390625e-06,
+        "llm_generation": 4.838620185852051,
+        "total_query_time": 4.8539252281188965
+      },
+      "num_retrieved_docs": 3,
+      "response_length": 837
+    },
+    {
+      "query": "how often should men get a PSA test",
+      "timings": {
+        "query_encoding": 0.04700112342834473,
+        "vector_search": 0.0006668567657470703,
+        "document_retrieval": 2.86102294921875e-06,
+        "prompt_augmentation": 5.7220458984375e-06,
+        "llm_generation": 4.080072402954102,
+        "total_query_time": 4.127753257751465
+      },
+      "num_retrieved_docs": 3,
+      "response_length": 964
+    },
+    {
+      "query": "what is financial assets",
+      "timings": {
+        "query_encoding": 0.04184985160827637,
+        "vector_search": 0.000659942626953125,
+        "document_retrieval": 1.0967254638671875e-05,
+        "prompt_augmentation": 8.821487426757812e-06,
+        "llm_generation": 0.6681301593780518,
+        "total_query_time": 0.7106618881225586
+      },
+      "num_retrieved_docs": 3,
+      "response_length": 4
+    },
+    {
+      "query": "Starch and _____ are common polysaccharide carbohydrates found in plants.",
+      "timings": {
+        "query_encoding": 0.04163479804992676,
+        "vector_search": 0.0006520748138427734,
+        "document_retrieval": 1.3113021850585938e-05,
+        "prompt_augmentation": 8.821487426757812e-06,
+        "llm_generation": 1.8090310096740723,
+        "total_query_time": 1.8513448238372803
+      },
+      "num_retrieved_docs": 3,
+      "response_length": 276
+    },
+    {
+      "query": "is cypress community storage flooded",
+      "timings": {
+        "query_encoding": 0.04532885551452637,
+        "vector_search": 0.0007688999176025391,
+        "document_retrieval": 3.814697265625e-06,
+        "prompt_augmentation": 5.245208740234375e-06,
+        "llm_generation": 4.312245845794678,
+        "total_query_time": 4.358356952667236
+      },
+      "num_retrieved_docs": 3,
+      "response_length": 227
+    }
+  ]
+}

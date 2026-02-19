@@ -1,0 +1,236 @@
+================================================================================
+RAG PIPELINE TIMING FLOW - Part 3 Implementation
+================================================================================
+
+INITIALIZATION PHASE (One-time, measured separately):
+┌─────────────────────────────────────────────────────────────────────────┐
+│  START INITIALIZATION                                                   │
+│                                                                          │
+│  ┌────────────────────┐                                                 │
+│  │ Load Encoder Model │ ← Timed (encoder_time)                          │
+│  └────────────────────┘                                                 │
+│            ↓                                                             │
+│  ┌────────────────────┐                                                 │
+│  │ Build Vector DB    │ ← Timed (vdb_time)                              │
+│  │ - Load documents   │                                                 │
+│  │ - Build FAISS index│                                                 │
+│  └────────────────────┘                                                 │
+│            ↓                                                             │
+│  ┌────────────────────┐                                                 │
+│  │ Load LLM Model     │ ← Timed (llm_time)                              │
+│  └────────────────────┘                                                 │
+│                                                                          │
+│  INITIALIZATION COMPLETE                                                │
+│  Total Init Time = encoder_time + vdb_time + llm_time                   │
+└─────────────────────────────────────────────────────────────────────────┘
+
+
+QUERY PROCESSING PHASE (Per query, all 5 steps timed):
+┌─────────────────────────────────────────────────────────────────────────┐
+│  START QUERY: "What causes squirrels to lose fur?"                      │
+│                                                                          │
+│  total_start = time.time()                                              │
+│                                                                          │
+│  ┌─────────────────────────────────────────────────────────────────┐   │
+│  │ STEP 1: QUERY ENCODING                                          │   │
+│  │                                                                  │   │
+│  │  start = time.time()                                            │   │
+│  │  ┌──────────────────────────────────────────────────┐           │   │
+│  │  │ Input: "What causes squirrels to lose fur?"      │           │   │
+│  │  │ Process: BGE encoder model                       │           │   │
+│  │  │ Output: 768-dimensional vector                   │           │   │
+│  │  └──────────────────────────────────────────────────┘           │   │
+│  │  query_encoding_time = time.time() - start                      │   │
+│  │  Typical: ~20-30ms (~1% of total)                               │   │
+│  └─────────────────────────────────────────────────────────────────┘   │
+│                            ↓                                             │
+│  ┌─────────────────────────────────────────────────────────────────┐   │
+│  │ STEP 2: VECTOR SEARCH                                           │   │
+│  │                                                                  │   │
+│  │  start = time.time()                                            │   │
+│  │  ┌──────────────────────────────────────────────────┐           │   │
+│  │  │ Input: Query embedding (768-dim)                 │           │   │
+│  │  │ Process: FAISS index search (L2 distance)        │           │   │
+│  │  │ Output: Top-K document indices & distances       │           │   │
+│  │  └──────────────────────────────────────────────────┘           │   │
+│  │  vector_search_time = time.time() - start                       │   │
+│  │  Typical: ~1-2ms (~0.1% of total)                               │   │
+│  └─────────────────────────────────────────────────────────────────┘   │
+│                            ↓                                             │
+│  ┌─────────────────────────────────────────────────────────────────┐   │
+│  │ STEP 3: DOCUMENT RETRIEVAL                                      │   │
+│  │                                                                  │   │
+│  │  start = time.time()                                            │   │
+│  │  ┌──────────────────────────────────────────────────┐           │   │
+│  │  │ Input: Document indices [42, 1337, 891]          │           │   │
+│  │  │ Process: Lookup in document dictionary           │           │   │
+│  │  │ Output: Full text of K documents                 │           │   │
+│  │  └──────────────────────────────────────────────────┘           │   │
+│  │  document_retrieval_time = time.time() - start                  │   │
+│  │  Typical: ~0.3ms (~0.01% of total)                              │   │
+│  └─────────────────────────────────────────────────────────────────┘   │
+│                            ↓                                             │
+│  ┌─────────────────────────────────────────────────────────────────┐   │
+│  │ STEP 4: PROMPT AUGMENTATION                                     │   │
+│  │                                                                  │   │
+│  │  start = time.time()                                            │   │
+│  │  ┌──────────────────────────────────────────────────┐           │   │
+│  │  │ Input: Query + Retrieved documents               │           │   │
+│  │  │ Process: String concatenation with template      │           │   │
+│  │  │ Output: Augmented prompt for LLM                 │           │   │
+│  │  │                                                   │           │   │
+│  │  │ Format:                                           │           │   │
+│  │  │   <system>You are a helpful assistant...</system>│           │   │
+│  │  │   <context>Doc1... Doc2... Doc3...</context>     │           │   │
+│  │  │   <user>Question: ...</user>                     │           │   │
+│  │  └──────────────────────────────────────────────────┘           │   │
+│  │  prompt_augmentation_time = time.time() - start                 │   │
+│  │  Typical: ~0.1ms (~0.01% of total)                              │   │
+│  └─────────────────────────────────────────────────────────────────┘   │
+│                            ↓                                             │
+│  ┌─────────────────────────────────────────────────────────────────┐   │
+│  │ STEP 5: LLM GENERATION                          ⚠ BOTTLENECK    │   │
+│  │                                                                  │   │
+│  │  start = time.time()                                            │   │
+│  │  ┌──────────────────────────────────────────────────┐           │   │
+│  │  │ Input: Augmented prompt                          │           │   │
+│  │  │ Process: TinyLlama inference (token by token)    │           │   │
+│  │  │ Output: Generated response text                  │           │   │
+│  │  │                                                   │           │   │
+│  │  │ This is SLOW because:                            │           │   │
+│  │  │ - Running on CPU (no GPU acceleration)           │           │   │
+│  │  │ - Generates ~100-200 tokens sequentially         │           │   │
+│  │  │ - Each token requires full model forward pass    │           │   │
+│  │  └──────────────────────────────────────────────────┘           │   │
+│  │  llm_generation_time = time.time() - start                      │   │
+│  │  Typical: ~2-3 seconds (~95-99% of total) ← BOTTLENECK!         │   │
+│  └─────────────────────────────────────────────────────────────────┘   │
+│                            ↓                                             │
+│  total_query_time = time.time() - total_start                           │
+│                                                                          │
+│  QUERY COMPLETE                                                          │
+│  Total Time ≈ 2.5 seconds (mostly LLM generation)                       │
+└─────────────────────────────────────────────────────────────────────────┘
+
+
+TIMING BREAKDOWN VISUALIZATION:
+┌─────────────────────────────────────────────────────────────────────────┐
+│                                                                          │
+│  Query Encoding        [█]                                    1.0%      │
+│  Vector Search         []                                     0.05%     │
+│  Document Retrieval    []                                     0.01%     │
+│  Prompt Augmentation   []                                     0.01%     │
+│  LLM Generation        [████████████████████████████████████] 98.9%     │
+│                                                                          │
+│  Total: 2.5 seconds                                                     │
+│                                                                          │
+│  ⚠ BOTTLENECK IDENTIFIED: LLM Generation (98.9% of time)                │
+│                                                                          │
+└─────────────────────────────────────────────────────────────────────────┘
+
+
+AGGREGATE STATISTICS (Across Multiple Queries):
+┌─────────────────────────────────────────────────────────────────────────┐
+│                                                                          │
+│  After running N queries, we collect:                                   │
+│                                                                          │
+│  For each component:                                                    │
+│    - Mean time                                                           │
+│    - Standard deviation                                                  │
+│    - Min time                                                            │
+│    - Max time                                                            │
+│    - Median time                                                         │
+│                                                                          │
+│  Overall metrics:                                                        │
+│    - Total queries processed                                             │
+│    - Total time                                                          │
+│    - Average latency per query                                           │
+│    - Throughput (queries/second)                                         │
+│                                                                          │
+└─────────────────────────────────────────────────────────────────────────┘
+
+
+OUTPUT FILES GENERATED:
+┌─────────────────────────────────────────────────────────────────────────┐
+│                                                                          │
+│  1. timing_distributions.png                                            │
+│     ┌─────────┬─────────┬─────────┐                                     │
+│     │ Hist 1  │ Hist 2  │ Hist 3  │  ← Histograms for each component    │
+│     ├─────────┼─────────┼─────────┤                                     │
+│     │ Hist 4  │ Hist 5  │ Hist 6  │                                     │
+│     └─────────┴─────────┴─────────┘                                     │
+│                                                                          │
+│  2. component_breakdown.png                                             │
+│     ┌──────────────┬──────────────┐                                     │
+│     │  Pie Chart   │  Bar Chart   │  ← Visual breakdown                 │
+│     └──────────────┴──────────────┘                                     │
+│                                                                          │
+│  3. benchmark_results.json                                              │
+│     {                                                                    │
+│       "num_queries": 20,                                                │
+│       "statistics": {...},                                              │
+│       "individual_queries": [...]                                       │
+│     }                                                                    │
+│                                                                          │
+└─────────────────────────────────────────────────────────────────────────┘
+
+
+OPTIMIZATION EXPERIMENTS:
+┌─────────────────────────────────────────────────────────────────────────┐
+│                                                                          │
+│  Experiment 1: Top-K Values (1, 3, 5, 10)                               │
+│  ┌─────────────────────────────────────────────────────────┐            │
+│  │  K=1:  Fast search, less context                        │            │
+│  │  K=3:  Balanced (default)                               │            │
+│  │  K=5:  More context, slower LLM                         │            │
+│  │  K=10: Best context, slowest LLM                        │            │
+│  └─────────────────────────────────────────────────────────┘            │
+│  Output: topk_comparison.png                                            │
+│                                                                          │
+│  Experiment 2: Batch Sizes (1, 4, 8, 16, 32, 64)                        │
+│  ┌─────────────────────────────────────────────────────────┐            │
+│  │  Batch=1:  Low throughput, low latency                  │            │
+│  │  Batch=8:  Balanced                                     │            │
+│  │  Batch=64: High throughput, high latency                │            │
+│  └─────────────────────────────────────────────────────────┘            │
+│  Output: batch_comparison.png                                           │
+│                                                                          │
+│  Experiment 3: Index Types (Flat vs IVF)                                │
+│  ┌─────────────────────────────────────────────────────────┐            │
+│  │  Flat:  Exact search, slower, 100% accurate             │            │
+│  │  IVF:   Approximate search, faster, ~99% accurate       │            │
+│  └─────────────────────────────────────────────────────────┘            │
+│  Output: index_comparison.png                                           │
+│                                                                          │
+└─────────────────────────────────────────────────────────────────────────┘
+
+
+KEY INSIGHTS FOR YOUR REPORT:
+┌─────────────────────────────────────────────────────────────────────────┐
+│                                                                          │
+│  1. BOTTLENECK: LLM Generation dominates (95-99% of time)               │
+│     - This is expected and normal                                       │
+│     - CPU inference is inherently slow                                  │
+│     - Each token requires full model forward pass                       │
+│                                                                          │
+│  2. VECTOR SEARCH: Very fast with 10K documents                         │
+│     - Only ~1-2ms per query                                             │
+│     - Would become bottleneck with millions of documents                │
+│     - IVF optimization helps at scale                                   │
+│                                                                          │
+│  3. OPTIMIZATION OPPORTUNITIES:                                          │
+│     - GPU acceleration (biggest impact on LLM)                          │
+│     - Smaller model (faster but lower quality)                          │
+│     - Batch processing (better throughput)                              │
+│     - IVF index (for larger datasets)                                   │
+│     - Caching (for repeated queries)                                    │
+│                                                                          │
+│  4. TRADEOFFS:                                                           │
+│     - Speed vs Accuracy (IVF, smaller model)                            │
+│     - Latency vs Throughput (batching)                                  │
+│     - Context vs Speed (top-K value)                                    │
+│                                                                          │
+└─────────────────────────────────────────────────────────────────────────┘
+
+================================================================================
+
